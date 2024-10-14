@@ -11,6 +11,20 @@ connect();
 export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
+    const { username, email, password } = reqBody;
+    const user = await User.findOne({ email });
+    if (user) {
+      return NextResponse.json(
+        {
+          error: "User already exists",
+        },
+        { status: 400 }
+      );
+    }
+    const salt=await bcryptjs.getSalt(10)
+    const  hashedPassword = await bcryptjs.hash(password, salt);
+    
+
   } catch (error: any) {
     return NextResponse.json(
       {
@@ -18,5 +32,6 @@ export async function POST(request: NextRequest) {
       },
       { status: 500 }
     );
+
   }
 }
