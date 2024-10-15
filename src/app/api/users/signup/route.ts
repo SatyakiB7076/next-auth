@@ -21,10 +21,15 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    const salt=await bcryptjs.getSalt(10)
-    const  hashedPassword = await bcryptjs.hash(password, salt);
-    
+    const salt = await bcryptjs.genSalt(10);
+    const hashedPassword = await bcryptjs.hash(password, salt);
 
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword,
+    });
+    await newUser.save();
   } catch (error: any) {
     return NextResponse.json(
       {
@@ -32,6 +37,5 @@ export async function POST(request: NextRequest) {
       },
       { status: 500 }
     );
-
   }
 }
