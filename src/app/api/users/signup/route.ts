@@ -29,7 +29,15 @@ export async function POST(request: NextRequest) {
       email,
       password: hashedPassword,
     });
-    await newUser.save();
+    const savedUser=await newUser.save();
+    return NextResponse.json(
+      {
+        message: "User Created successfully",
+        success:true,
+        savedUser
+      }
+    );
+
   } catch (error: any) {
     return NextResponse.json(
       {
